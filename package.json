@@ -1,0 +1,48 @@
+{
+  "name": "markmail",
+  "version": "1.0.0",
+  "description": "",
+  "source": "src/main.ts",
+  "module": "dist/markmail.js",
+  "types": "dist/markmail.d.ts",
+  "type": "module",
+  "bin": "dist/markmail.js",
+  "sideEffects": "none",
+  "scripts": {
+    "watch": "parcel watch",
+    "build": "parcel build",
+    "start": "node dist/markmail.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^9.4.1",
+    "eta": "^1.12.3",
+    "glob": "^8.0.3",
+    "gray-matter": "^4.0.3",
+    "lilconfig": "^2.0.6",
+    "marked": "^4.2.5",
+    "mjml": "^4.13.0",
+    "node-emoji": "^1.11.0",
+    "prettier": "^2.8.1",
+    "radash": "^10.3.2"
+  },
+  "devDependencies": {
+    "@parcel/core": "^2.8.2",
+    "@parcel/package-manager": "^2.8.2",
+    "@parcel/packager-ts": "^2.8.2",
+    "@parcel/transformer-typescript-types": "^2.8.2",
+    "@trivago/prettier-plugin-sort-imports": "^4.0.0",
+    "@types/commander": "^2.12.2",
+    "@types/glob": "^8.0.0",
+    "@types/marked": "^4.0.8",
+    "@types/mjml": "^4.7.0",
+    "@types/node": "^18.11.17",
+    "@types/node-emoji": "^1.8.2",
+    "@types/prettier": "^2.7.2",
+    "parcel": "^2.8.2",
+    "typescript": "^4.9.4"
+  }
+}
