@@ -1,6 +1,6 @@
 {
   "name": "maildown",
-  "version": "0.0.1-rc2",
+  "version": "0.0.1-rc3",
   "description": "Write transactional and marketing emails using MJML & Markdown",
   "source": "src/main.ts",
   "module": "dist/maildown.js",
@@ -14,7 +14,7 @@
     "package.json"
   ],
   "scripts": {
-    "prepublish": "npm run build",
+    "prepack": "npm run build",
     "watch": "parcel watch",
     "build": "parcel build",
     "format": "prettier --write",
