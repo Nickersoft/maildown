@@ -32,6 +32,6 @@ export async function getLayout(name: string | undefined) {
 
     return compile(template, { ...etaConfig, autoEscape: false });
   } catch (e) {
-    throw new Error(`Couldn't find layout file with name "${name}.mjml"!`);
+    console.error(e);
   }
 }
