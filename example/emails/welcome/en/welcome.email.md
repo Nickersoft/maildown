@@ -7,4 +7,4 @@ subject: Welcome to our app!
 
 Hello {{it.name}},
 
-This is a demo of MarkMail! Feel free to use how you see fit.
+This is a demo of MailDown! Feel free to use how you see fit.

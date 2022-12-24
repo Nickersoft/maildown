@@ -1,6 +1,6 @@
-import { MarkMailConfig } from './get-config';
+import { MailDownConfig } from './get-config';
 
-export const defaultConfig: MarkMailConfig = {
+export const defaultConfig: MailDownConfig = {
   layoutDir: 'layouts',
   extension: '.email.md',
   headFile: 'head.mjml',

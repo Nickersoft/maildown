@@ -1,12 +1,12 @@
 {
-  "name": "markmail",
+  "name": "maildown",
   "version": "0.0.1-rc1",
   "description": "Write transactional and marketing emails using MJML & Markdown",
   "source": "src/main.ts",
-  "module": "dist/markmail.js",
-  "types": "dist/markmail.d.ts",
+  "module": "dist/maildown.js",
+  "types": "dist/maildown.d.ts",
   "type": "module",
-  "bin": "dist/markmail.js",
+  "bin": "dist/maildown.js",
   "sideEffects": "none",
   "files": [
     "dist",
@@ -17,7 +17,7 @@
     "watch": "parcel watch",
     "build": "parcel build",
     "format": "prettier --write",
-    "start": "node dist/markmail.js",
+    "start": "node dist/maildown.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

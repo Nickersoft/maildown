@@ -7,7 +7,7 @@ import ora from 'ora';
 import prettier from 'prettier';
 import { camel as camelCase, group } from 'radash';
 
-import { MarkMailConfig, getConfig } from '../config';
+import { MailDownConfig, getConfig } from '../config';
 import { mdTemplateToHTML } from '../utils/md-to-html';
 
 const { format, resolveConfig: resolvePrettierConfig, resolveConfigFile: resolvePrettierConfigFile } = prettier;
@@ -56,7 +56,7 @@ async function writeIndexFile(dir: string, fileContents: string) {
   await writeFile(outFile, content);
 }
 
-async function generateIndex(dir: string, files: string[], config: MarkMailConfig) {
+async function generateIndex(dir: string, files: string[], config: MailDownConfig) {
   // Group each file by name, where the value is an array of all localized versions
   // of the file
   const fileGroups = group(files, (f) => camelCase(basename(f, config.extension)));

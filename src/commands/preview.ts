@@ -25,7 +25,7 @@ async function preview(path: string, options: Record<string, string[]>) {
   if (path && path.endsWith(config.extension)) {
     const loader = ora('Compiling template for preview...').start();
 
-    const tmpDir = mkdtempSync(join(tmpdir(), 'markmail'));
+    const tmpDir = mkdtempSync(join(tmpdir(), 'maildown'));
     const compiler = await mdTemplateToHTML(path);
     const html = await compiler.html(vars, etaConfig);
     const bn = basename(path, extname(path));

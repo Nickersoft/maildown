@@ -1,7 +1,8 @@
-import { defaultConfig } from './default-config';
 import { LilconfigResult, lilconfig } from 'lilconfig';
 
-export interface MarkMailConfig {
+import { defaultConfig } from './default-config';
+
+export interface MailDownConfig {
   layoutDir: string;
   headFile: string;
   extension: string;
@@ -12,7 +13,7 @@ let config: LilconfigResult | null;
 
 export async function getConfigRaw() {
   if (!config) {
-    config = await lilconfig('markmail').search();
+    config = await lilconfig('maildown').search();
   }
   return config;
 }
