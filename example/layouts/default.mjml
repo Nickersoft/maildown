@@ -1,6 +1,6 @@
 <mj-section>
   <mj-column>
-    {{ it.body }}
+    {{= it.body }}
   </mj-column>
 </mj-section>
     

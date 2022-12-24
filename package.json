@@ -1,6 +1,6 @@
 {
   "name": "maildown",
-  "version": "0.0.1-rc6",
+  "version": "0.0.1-rc7",
   "description": "Write transactional and marketing emails using MJML & Markdown",
   "source": "src/main.ts",
   "repository": "https://github.com/Linguistic/maildown",

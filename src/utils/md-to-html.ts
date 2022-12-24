@@ -19,15 +19,7 @@ import { renderer as plainText } from './plain-text.renderer';
 const read = promisify(readFile);
 
 marked.use({ renderer });
-configureEta({
-  tags: ['{{', '}}'],
-  async: true,
-  parse: {
-    interpolate: '',
-    exec: '!',
-    raw: '~',
-  },
-});
+configureEta({ tags: ['{{', '}}'], async: true });
 
 export async function mdTemplateToHTML(file: string, isPreview: boolean = false) {
   const { layoutDir } = await getConfig();
