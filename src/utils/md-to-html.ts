@@ -21,6 +21,7 @@ const read = promisify(readFile);
 marked.use({ renderer });
 configureEta({
   tags: ['{{', '}}'],
+  async: true,
   parse: {
     interpolate: '',
     exec: '!',
