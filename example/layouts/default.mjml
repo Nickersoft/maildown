@@ -1,6 +1,7 @@
 <mj-section>
   <mj-column>
     {{= it.body }}
+    <mj-text>This is an unused variable {{= "{{=it.myvar}}" }}</mj-text> 
   </mj-column>
 </mj-section>
     
