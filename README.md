@@ -6,17 +6,21 @@ MM comes with a slew of impressive features, such as:
 
 📱 **Responsiveness by default**: MailDown uses [MJML](https://mjml.io) under-the-hood for its styling, layout engine and transpiler, so you can be assured that your emails will look beautiful on every device.
 
-🔁 **Variable interpolation**: Using the incredibly-fast [ETA](https://eta.js.org/) templating language, MailDown allows you to inject variables into your email templates at runtime.
+🔁 **Variable interpolation**: Using the incredibly-fast [ETA](https://eta.js.org/) templating language, MailDown allows you to inject variables into your email templates.
 
-🙏🏻 **No runtime overhead**: MailDown compiles your email templates to regular JavaScript functions, so there's no need to read HTML files from the filesystem or use MJML at runtime.
+🌍 **Localization support**: MailDown expects each email directory to contain a collection of locale directories, so you can write the same email in as many languages as you wish!
 
----
-
-**MailDown is still an unpublished project and in active development. Expect bugs.**
+🙏🏻 **No runtime overhead**: MailDown compiles your email templates to regular JavaScript functions, so there's no need to read HTML files from the filesystem or compile MJML.
 
 ## How to use
 
-Using MailDown is dead-simple. Once the CLI is installed (after we publish it lol), you can set up a project similar to the following:
+Using MailDown is dead-simple. First install the CLI:
+
+```bash
+$ npm install -g maildown
+```
+
+Then, set up a project similar to the following:
 
 ```
 emails/
@@ -50,7 +54,7 @@ import { helloWorld } from './emails';
 console.log(helloWorld.en.html({ name: 'John Doe' }));
 ```
 
-You can check out the [example](./example) folder for a fuller example!
+You can check out the [example](./example) folder for more details!
 
 ## Why would I need this?
 
