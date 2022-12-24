@@ -1,5 +1,4 @@
 ---
-layout: default
 subject: Welcome to our app!
 ---
 

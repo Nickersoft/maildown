@@ -14,16 +14,30 @@ const { format, resolveConfig: resolvePrettierConfig, resolveConfigFile: resolve
 
 const functionRegex = /function anonymous\(([\s\SA-Za-z]+?)\)/gim;
 
-function getEmails() {
+async function getGlobPattern(dirs: string[]) {
+  const config = await getConfig();
+
+  let folders;
+
+  if (dirs.length > 1) {
+    folders = `{${dirs.join(',')}}`;
+  } else {
+    folders = dirs?.[0];
+  }
+
+  return join(folders, '**', `*${config.extension}`);
+}
+
+async function getEmails(dirs: string[]) {
   // Glob all .email.md files in the codebase
-  const files = glob.sync(join('**', '*.email.md'));
+  const files = await glob.sync(await getGlobPattern(dirs));
   // Group these files by their secondary parent directory (parent -> parent)
   return group(files, (f) => dirname(dirname(f)));
 }
 
 async function generateCodeFromPath(path: string) {
   // Create compiler functions
-  const { html: htmlFunc, text: textFunc, subject, templates } = await mdTemplateToHTML(path);
+  const { html: htmlFunc, text: textFunc, subject } = await mdTemplateToHTML(path);
 
   // Stringify them
   const htmlFuncStr = htmlFunc.toString().replace(functionRegex, '($1) =>');
@@ -82,23 +96,25 @@ async function generateIndex(dir: string, files: string[], config: MailDownConfi
   await writeIndexFile(dir, fileContent);
 }
 
-const Generate = new Command('generate').action(async function () {
-  const loader = ora('Generating templates...').start();
+const Generate = new Command('generate')
+  .argument('[directories...]', 'directory to search for emails', ['.'])
+  .action(async (dirs: string[]) => {
+    const loader = ora(`Generating templates...`).start();
 
-  // Find and load the config file
-  const config = await getConfig();
+    // Find and load the config file
+    const config = await getConfig();
 
-  // Retrieve the emails as a map of their parent directories to their children
-  const emails = getEmails();
+    // Retrieve the emails as a map of their parent directories to their children
+    const emails = await getEmails(dirs);
 
-  // Traverse over each email in the map
-  await Promise.all(
-    Object.entries(emails).map(async ([parentDir, files = []]) => {
-      return generateIndex(parentDir, files, config);
-    }),
-  );
+    // Traverse over each email in the map
+    await Promise.all(
+      Object.entries(emails).map(async ([parentDir, files = []]) => {
+        return generateIndex(parentDir, files, config);
+      }),
+    );
 
-  loader.succeed('Finished!');
-});
+    loader.succeed('Finished!');
+  });
 
 export { Generate };

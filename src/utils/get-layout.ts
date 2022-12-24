@@ -6,7 +6,7 @@ import { compile, config as etaConfig } from 'eta';
 
 import { getConfig, getConfigPath } from '../config';
 
-export async function getLayout(name: string) {
+export async function getLayout(name: string | undefined) {
   const configPath = await getConfigPath();
 
   const { layoutDir, headFile } = await getConfig();
@@ -22,7 +22,11 @@ export async function getLayout(name: string) {
   }
 
   try {
-    const layout = await readFile(join(layoutDir, `${name}.mjml`), 'utf-8');
+    let layout = '{{it.body}}';
+
+    if (name) {
+      layout = await readFile(join(layoutDir, `${name}.mjml`), 'utf-8');
+    }
 
     const template = `
     <mjml>

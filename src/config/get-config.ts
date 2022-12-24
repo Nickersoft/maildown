@@ -18,7 +18,7 @@ export async function getConfigRaw() {
   return config;
 }
 
-export async function getConfig() {
+export async function getConfig(): Promise<MailDownConfig> {
   const result = await getConfigRaw();
   return { ...defaultConfig, ...(result?.config ?? {}) };
 }
