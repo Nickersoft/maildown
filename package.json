@@ -1,13 +1,14 @@
 {
   "name": "maildown",
-  "version": "0.0.1-rc3",
+  "version": "0.0.1-rc4",
   "description": "Write transactional and marketing emails using MJML & Markdown",
   "source": "src/main.ts",
+  "repository": "https://github.com/Linguistic/maildown",
   "module": "dist/maildown.js",
   "types": "dist/maildown.d.ts",
   "type": "module",
   "bin": "dist/maildown.js",
-  "sideEffects": "none",
+  "sideEffects": false,
   "files": [
     "dist",
     "README.md",
@@ -21,9 +22,17 @@
     "start": "node dist/maildown.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "markdown",
+    "mjml",
+    "email",
+    "template",
+    "eta",
+    "marketing",
+    "transactional"
+  ],
+  "author": "Tyler Nickerson",
+  "license": "MIT",
   "dependencies": {
     "commander": "^9.4.1",
     "eta": "^1.12.3",
