@@ -1,87 +1,99 @@
-import { readFile, writeFile } from 'node:fs';
+import { writeFile } from 'node:fs/promises';
 import { basename, dirname, join } from 'node:path';
 
 import { Command } from 'commander';
 import glob from 'glob';
-import { format } from 'prettier';
-import { camel as camelCase } from 'radash';
-import { promisify } from 'util';
+import prettier from 'prettier';
+import { camel as camelCase, group } from 'radash';
 
+import { MarkMailConfig, getConfig } from '../config';
 import { mdTemplateToHTML } from '../utils/md-to-html';
 
-const write = promisify(writeFile);
-const read = promisify(readFile);
+const { format, resolveConfig: resolvePrettierConfig, resolveConfigFile: resolvePrettierConfigFile } = prettier;
 
-async function action() {
+function getEmails() {
   // Glob all .email.md files in the codebase
-  const files = glob.sync(join('..', '{apps,libs}', '**', '*.email.md'));
-
+  const files = glob.sync(join('**', '*.email.md'));
   // Group these files by their secondary parent directory (parent -> parent)
-  const grouped = files.reduce((acc, v) => {
-    const parentDir = dirname(dirname(v));
-    acc[parentDir] = [...(acc[parentDir] ?? []), v];
-    return acc;
-  }, {} as Record<string, string[]>);
-
-  // Traverse over each entry in the map
-  const traverse = Object.entries(grouped).map(async ([parentDir, files]) => {
-    // Group each file by name, where the value is an array of all localized versions of the file
-    const fileGroups = files.reduce((acc, v) => {
-      const file = camelCase(basename(v, '.email.md'));
-      acc[file] = [...(acc[file] ?? []), v];
-      return acc;
-    }, {} as Record<string, string[]>);
-
-    let js = '';
-
-    // For each file in our map
-    for (const file in fileGroups) {
-      let fileMap = `const ${file} = {`;
-
-      // Iterate through each localized version
-      for (const path of fileGroups[file]) {
-        // Create compiler functions
-        const { html: htmlFunc, text: textFunc, subject } = await mdTemplateToHTML(path);
-
-        // Stringify them
-        const htmlFuncStr = htmlFunc.toString().replace(/function anonymous\(([\s\SA-Za-z]+?)\)/gim, '($1) =>');
-        const textFuncStr = textFunc.toString().replace(/function anonymous\(([\s\SA-Za-z]+?)\)/gim, '($1) =>');
-
-        // Extract the language code from the path
-        const lang = basename(dirname(path));
-
-        if (lang.length !== 2) {
-          throw new Error(
-            `Invalid language identifier: ${lang}. Make sure every template is in a language-specific directory (en, fr, ja, etc.)`,
-          );
-        }
-
-        fileMap += `${lang}: {html: ${htmlFuncStr}, text: ${textFuncStr}, ${subject ? `subject: "${subject}"` : ''} }`;
-      }
-
-      fileMap += '};\n\n';
-      js += fileMap;
-    }
-
-    js += `\n\nexport { ${Object.keys(fileGroups).join(',')} }`;
-
-    const fileHeader = `
-/*******************************
-    THIS FILE IS GENERATED
-        DO NOT MODIFY!!!!
-*******************************/
-        `;
-
-    const fileContent = [fileHeader, js].join('\n\n');
-    const outFile = join(parentDir, 'index.ts');
-    const prettierConfig = JSON.parse(await read(join('..', '.prettierrc.json'), 'utf-8'));
-
-    await write(outFile, format(fileContent, { parser: 'typescript', ...prettierConfig }));
-  });
-
-  await Promise.all(traverse);
-
-  console.log('Generated HTML email templates!');
+  return group(files, (f) => dirname(dirname(f)));
 }
 
-export const Generate = new Command('generate').action(action);
+async function generateCodeFromPath(path: string) {
+  // Create compiler functions
+  const { html: htmlFunc, text: textFunc, subject } = await mdTemplateToHTML(path);
+
+  // Stringify them
+  const htmlFuncStr = htmlFunc.toString().replace(/function anonymous\(([\s\SA-Za-z]+?)\)/gim, '($1) =>');
+  const textFuncStr = textFunc.toString().replace(/function anonymous\(([\s\SA-Za-z]+?)\)/gim, '($1) =>');
+
+  // Extract the language code from the path
+  const lang = basename(dirname(path));
+
+  // Throw an error if we found an invalid language code
+  if (lang.length !== 2) {
+    const errMsg = `Invalid language identifier: ${lang}. Make sure every template is in a language-specific directory (en, fr, ja, etc.)`;
+    throw new Error(errMsg);
+  }
+
+  return `${lang}: { html: ${htmlFuncStr}, text: ${textFuncStr}, ${subject ? `subject: "${subject}"` : ''} },`;
+}
+
+async function writeIndexFile(dir: string, fileContents: string) {
+  const outFile = join(dir, 'index.ts');
+
+  const prettierConfigFile = await resolvePrettierConfigFile();
+
+  let content = fileContents;
+
+  if (prettierConfigFile !== null) {
+    const prettierConfig = resolvePrettierConfig(prettierConfigFile);
+    content = format(fileContents, { parser: 'typescript', ...prettierConfig });
+  }
+
+  await writeFile(outFile, content);
+}
+
+async function generateIndex(dir: string, files: string[], config: MarkMailConfig) {
+  // Group each file by name, where the value is an array of all localized versions
+  // of the file
+  const fileGroups = group(files, (f) => camelCase(basename(f, config.extension)));
+
+  let js = '';
+
+  // For each file in our map
+  for (const file in fileGroups) {
+    js += `const ${file} = {`;
+
+    // Iterate through each localized file
+    for (const path of fileGroups[file] ?? []) {
+      js += await generateCodeFromPath(path);
+    }
+
+    js += '};\n\n';
+  }
+
+  js += `\n\nexport { ${Object.keys(fileGroups).join(',')} }`;
+
+  const fileContent = [config.fileHeader, js].join('\n\n');
+
+  await writeIndexFile(dir, fileContent);
+}
+
+const Generate = new Command('generate').action(async function () {
+  // Find and load the config file
+  const config = await getConfig();
+
+  // Retrieve the emails as a map of their parent directories to their children
+  const emails = getEmails();
+
+  // Traverse over each email in the map
+  await Promise.all(
+    Object.entries(emails).map(async ([parentDir, files = []]) => {
+      return generateIndex(parentDir, files, config);
+    }),
+  );
+
+  console.log('Generated HTML email templates!');
+});
+
+export { Generate };

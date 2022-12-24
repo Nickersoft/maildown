@@ -12,24 +12,27 @@ import emoji from 'node-emoji';
 
 import { renderer } from './mjml.renderer';
 import { renderer as plainText } from './plain-text.renderer';
+import { getConfig } from '../config';
 
-const templatesDir = join('..', '..', 'mjml');
-const layoutsDir = join(templatesDir, 'layouts');
+
 const read = promisify(readFile);
 
 marked.use({ renderer });
 
 configureEta({ autoEscape: false, tags: ['(((', ')))'] });
 
-const layouts: Record<string, TemplateFunction> = glob.sync(join(layoutsDir, '*')).reduce(
-  (acc, file) => ({
-    ...acc,
-    [basename(file, '.mjml')]: compile(readFileSync(file, 'utf-8'), etaConfig),
-  }),
-  {},
-);
 
 export async function mdTemplateToHTML(file: string, isPreview: boolean = false) {
+  const {layoutDir} = await getConfig();
+
+  const layouts: Record<string, TemplateFunction> = glob.sync(join(layoutDir, '*')).reduce(
+    (acc, file) => ({
+      ...acc,
+      [basename(file, '.mjml')]: compile(readFileSync(file, 'utf-8'), etaConfig),
+    }),
+    {},
+  );
+
   const contents = await read(file, 'utf-8');
   const frontmatter = matter(contents);
   const layoutName = frontmatter.data?.layout ?? 'default';
@@ -37,7 +40,7 @@ export async function mdTemplateToHTML(file: string, isPreview: boolean = false)
   const toMJML = marked(emoji.emojify(frontmatter.content));
   const text = marked(emoji.emojify(frontmatter.content), { renderer: plainText });
   const toTemplate = template({ ...(frontmatter.data ?? {}), body: toMJML }, etaConfig);
-  const toHTML = mjml(toTemplate, { filePath: layoutsDir }).html;
+  const toHTML = mjml(toTemplate, { filePath: layoutDir }).html;
   const subjectLine = frontmatter?.data?.subject;
   const compilationConfig: ReturnType<typeof getEtaConfig> = { ...etaConfig, tags: ['{{', '}}'], async: true };
 

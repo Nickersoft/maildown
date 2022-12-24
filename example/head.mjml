@@ -1,0 +1,18 @@
+<mj-font name="Lato" href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400" />
+<mj-font name="Montserrat" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600" />
+    
+<mj-attributes>
+  <mj-all padding="0px"></mj-all>
+  <mj-text align="left" font-size="18px" font-family="Lato, Helvetica, Arial, sans-serif" color="#555555"></mj-text>
+  <mj-section padding="32px" background-color="#ffffff"></mj-section>
+  <mj-body background-color="#fbfbfb"></mj-body>
+  <mj-image padding-top="16px" padding-bottom="16px" />
+  <mj-divider padding-top="16px" padding-bottom="16px" border-color="#eee" border-width="2px" />
+</mj-attributes>
+
+<mj-style>
+  p > a {
+    text-decoration: none !important;
+    color: #1188E6 !important;
+  }
+</mj-style>
