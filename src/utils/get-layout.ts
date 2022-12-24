@@ -4,34 +4,25 @@ import { dirname, join, resolve } from 'node:path';
 
 import { compile, config as etaConfig } from 'eta';
 
-import { getConfig, getConfigPath } from '../config';
+import { getConfig, getConfigPath, resolvePathValue } from '../config';
 
 export async function getLayout(name: string | undefined) {
-  const configPath = await getConfigPath();
-
   const { layoutDir, headFile } = await getConfig();
 
-  let absoluteHeadFile: string | undefined;
-
-  if (configPath && headFile) {
-    absoluteHeadFile = resolve(dirname(configPath), headFile);
-
-    if (!existsSync(absoluteHeadFile)) {
-      throw new Error(`Could not find specified head file: "${absoluteHeadFile}"!`);
-    }
-  }
+  const absoluteHeadFile = await resolvePathValue(headFile);
+  const absoluteLayoutDir = await resolvePathValue(layoutDir);
 
   try {
     let layout = '{{it.body}}';
 
     if (name) {
-      layout = await readFile(join(layoutDir, `${name}.mjml`), 'utf-8');
+      layout = await readFile(join(absoluteLayoutDir, `${name}.mjml`), 'utf-8');
     }
 
     const template = `
     <mjml>
       <mj-head>
-        ${absoluteHeadFile ? `<mj-include path="${absoluteHeadFile}" />` : ''}
+        ${existsSync(absoluteHeadFile) ? `<mj-include path="${absoluteHeadFile}" />` : ''}
       </mj-head>
       <mj-body>
         ${layout}
