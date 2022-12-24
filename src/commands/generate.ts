@@ -3,6 +3,7 @@ import { basename, dirname, join } from 'node:path';
 
 import { Command } from 'commander';
 import glob from 'glob';
+import ora from 'ora';
 import prettier from 'prettier';
 import { camel as camelCase, group } from 'radash';
 
@@ -10,6 +11,8 @@ import { MarkMailConfig, getConfig } from '../config';
 import { mdTemplateToHTML } from '../utils/md-to-html';
 
 const { format, resolveConfig: resolvePrettierConfig, resolveConfigFile: resolvePrettierConfigFile } = prettier;
+
+const functionRegex = /function anonymous\(([\s\SA-Za-z]+?)\)/gim;
 
 function getEmails() {
   // Glob all .email.md files in the codebase
@@ -20,11 +23,11 @@ function getEmails() {
 
 async function generateCodeFromPath(path: string) {
   // Create compiler functions
-  const { html: htmlFunc, text: textFunc, subject } = await mdTemplateToHTML(path);
+  const { html: htmlFunc, text: textFunc, subject, templates } = await mdTemplateToHTML(path);
 
   // Stringify them
-  const htmlFuncStr = htmlFunc.toString().replace(/function anonymous\(([\s\SA-Za-z]+?)\)/gim, '($1) =>');
-  const textFuncStr = textFunc.toString().replace(/function anonymous\(([\s\SA-Za-z]+?)\)/gim, '($1) =>');
+  const htmlFuncStr = htmlFunc.toString().replace(functionRegex, '($1) =>');
+  const textFuncStr = textFunc.toString().replace(functionRegex, '($1) =>');
 
   // Extract the language code from the path
   const lang = basename(dirname(path));
@@ -39,7 +42,7 @@ async function generateCodeFromPath(path: string) {
 }
 
 async function writeIndexFile(dir: string, fileContents: string) {
-  const outFile = join(dir, 'index.ts');
+  const outFile = join(dir, 'index.js');
 
   const prettierConfigFile = await resolvePrettierConfigFile();
 
@@ -80,6 +83,8 @@ async function generateIndex(dir: string, files: string[], config: MarkMailConfi
 }
 
 const Generate = new Command('generate').action(async function () {
+  const loader = ora('Generating templates...').start();
+
   // Find and load the config file
   const config = await getConfig();
 
@@ -93,7 +98,7 @@ const Generate = new Command('generate').action(async function () {
     }),
   );
 
-  console.log('Generated HTML email templates!');
+  loader.succeed('Finished!');
 });
 
 export { Generate };

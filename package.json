@@ -11,6 +11,7 @@
   "scripts": {
     "watch": "parcel watch",
     "build": "parcel build",
+    "format": "prettier --write",
     "start": "node dist/markmail.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -26,6 +27,7 @@
     "marked": "^4.2.5",
     "mjml": "^4.13.0",
     "node-emoji": "^1.11.0",
+    "ora": "^6.1.2",
     "prettier": "^2.8.1",
     "radash": "^10.3.2"
   },

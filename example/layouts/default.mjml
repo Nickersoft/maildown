@@ -1,12 +1,6 @@
-<mjml>
-  <mj-head>
-    <mj-include path="../partials/styles.mjml" />
-  </mj-head>
-  <mj-body>
-    <mj-section>
-      <mj-column>
-        %{body}
-      </mj-column>
-    </mj-section>
-  </mj-body>
-</mjml>
+<mj-section>
+  <mj-column>
+    {{ it.body }}
+  </mj-column>
+</mj-section>
+    

@@ -1,29 +1,27 @@
-import { lilconfig } from 'lilconfig';
-import { assign } from 'radash';
+import { defaultConfig } from './default-config';
+import { LilconfigResult, lilconfig } from 'lilconfig';
 
 export interface MarkMailConfig {
   layoutDir: string;
-  headFile?: string;
+  headFile: string;
   extension: string;
   fileHeader: string;
 }
 
-const defaultConfig: MarkMailConfig = {
-  layoutDir: 'layouts',
-  extension: '.email.md',
-  fileHeader: `
-/*******************************
-    THIS FILE IS GENERATED
-        DO NOT MODIFY!!!!
-*******************************/
-`,
-};
+let config: LilconfigResult | null;
 
-export function getConfig() {
-  return lilconfig('markmail')
-    .search()
-    .then((r) => ({
-      ...defaultConfig,
-      ...(r?.config ?? {}),
-    }));
+export async function getConfigRaw() {
+  if (!config) {
+    config = await lilconfig('markmail').search();
+  }
+  return config;
+}
+
+export async function getConfig() {
+  const result = await getConfigRaw();
+  return { ...defaultConfig, ...(result?.config ?? {}) };
+}
+
+export function getConfigPath() {
+  return getConfigRaw().then((result) => result?.filepath ?? null);
 }
