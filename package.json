@@ -34,7 +34,7 @@
   "author": "Tyler Nickerson",
   "license": "MIT",
   "dependencies": {
-    "commander": "^9.4.1",
+    "commander": "^10.0.0",
     "eta": "^1.12.3",
     "glob": "^8.0.3",
     "gray-matter": "^4.0.3",
