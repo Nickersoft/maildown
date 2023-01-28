@@ -35,7 +35,7 @@
   "license": "MIT",
   "dependencies": {
     "commander": "^9.4.1",
-    "eta": "^1.12.3",
+    "eta": "^2.0.0",
     "glob": "^8.0.3",
     "gray-matter": "^4.0.3",
     "lilconfig": "^2.0.6",
