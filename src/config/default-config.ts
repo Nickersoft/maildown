@@ -7,7 +7,7 @@ export const defaultConfig: ConfigSchema = {
     divider: {},
     headings: {
       h1: {
-        color: "red",
+        color: "#FF0000",
       },
       h2: {},
       h3: {},

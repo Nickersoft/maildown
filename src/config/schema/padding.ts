@@ -5,4 +5,6 @@ export const Padding = z.object({
   bottom: z.number(),
   left: z.number(),
   right: z.number(),
-});
+}).or(z.number());
+
+export type Padding = z.infer<typeof Padding>;

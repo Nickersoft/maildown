@@ -12,10 +12,13 @@ export const Typography = z.object({
   height: z.number(),
   textDecoration: z.enum(["underline", "overline", "line-through", "none"])
     .default("none"),
-  transform: z.enum(["uppercase", "lowercase", "capitalize", "none"]).default(
-    "none",
-  ),
+  textTransform: z.enum(["uppercase", "lowercase", "capitalize", "none"])
+    .default(
+      "none",
+    ),
   align: z.enum(["left", "right", "center", "justify-left"]),
   containerBackgroundColor: Color,
   padding: z.union([z.number(), Padding]),
 }).partial();
+
+export type Typography = z.infer<typeof Typography>;

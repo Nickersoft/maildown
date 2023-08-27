@@ -20,3 +20,7 @@ export const schema = z.object({
 });
 
 export type ConfigSchema = z.infer<typeof schema>;
+
+export type { Typography } from "./typography.ts";
+
+export type { Padding } from "./padding.ts";
