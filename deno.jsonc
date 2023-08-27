@@ -1,0 +1,21 @@
+{
+  "tasks": {
+    "dev": "deno run --watch main.ts"
+  },
+  "imports": {
+    "eta": "https://deno.land/x/eta@^3/mod.ts",
+    "mjml": "npm:mjml@^4",
+    "@std/collections/": "https://deno.land/std@0.200.0/collections/",
+    "open": "npm:open@^9",
+    "lilconfig": "npm:lilconfig@^2",
+    "rehype-stringify": "npm:rehype-stringify@^9",
+    "mdast-util-to-hast": "npm:mdast-util-to-hast@^12",
+    "mdast": "npm:mdast@^3",
+    "remark-emoji": "npm:remark-emoji@^4",
+    "remark-frontmatter": "npm:remark-frontmatter@^4",
+    "remark-parse": "npm:remark-parse@^10",
+    "remark-rehype": "npm:remark-rehype@^10",
+    "unified": "npm:unified@^10",
+    "zod": "https://deno.land/x/zod@v3.22.2/mod.ts"
+  }
+}
