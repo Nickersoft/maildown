@@ -1,16 +1,18 @@
 {
   "tasks": {
-    "dev": "deno run --watch main.ts"
+    "dev": "deno run --watch main.ts",
+    "test": "deno test --allow-read --allow-write **/*.spec.ts"
   },
   "imports": {
+    "@std/": "https://deno.land/std@0.200.0/",
+    "case": "https://deno.land/x/case@2.1.1/mod.ts",
     "eta": "https://deno.land/x/eta@^3/mod.ts",
-    "mjml": "npm:mjml@^4",
-    "@std/collections/": "https://deno.land/std@0.200.0/collections/",
-    "open": "npm:open@^9",
     "lilconfig": "npm:lilconfig@^2",
-    "rehype-stringify": "npm:rehype-stringify@^9",
     "mdast-util-to-hast": "npm:mdast-util-to-hast@^12",
     "mdast": "npm:mdast@^3",
+    "mjml": "npm:mjml@^4",
+    "open": "npm:open@^9",
+    "rehype-stringify": "npm:rehype-stringify@^9",
     "remark-emoji": "npm:remark-emoji@^4",
     "remark-frontmatter": "npm:remark-frontmatter@^4",
     "remark-parse": "npm:remark-parse@^10",

@@ -9,8 +9,6 @@ export const handlers: Handlers = {
     tagName: "mj-text",
     properties: {
       "mj-class": `h${node.depth}`,
-      "line-height": "48px",
-      "font-family": "Montserrat",
     },
     children: [{
       type: "element",
